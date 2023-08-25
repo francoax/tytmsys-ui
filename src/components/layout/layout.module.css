@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2%;
+  min-height: 85vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1.5%;
+  min-height: 50px;
+  background-color: #66acc5;
+}
+
+.optionsContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.option a {
+  margin: 0 1em;
+  padding: 15px;
+  border-radius: 5px;
+  color: #ffffff;
+  background-color: #66acc5;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.option a:hover {
+  background-color: #534f50;
+}
+
+.option .activeOption {
+  background-color: #534f50;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3em;
+  padding: 5%;
+  background-color: #66acc5;
+}
+
+.copy {
+  font-size: 1.2rem;
+  font-style: italic;
+}

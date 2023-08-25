@@ -1,0 +1,43 @@
+.tableContainer {
+  margin-top: 3rem;
+}
+
+.button {
+  margin: 0 1em;
+}
+
+.stockTitle {
+  margin: 1em 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  margin-top: 1em;
+  font-weight: 500;
+}
+
+.title span {
+  font-weight: 700;
+  font-style: italic;
+}
+
+.itemInfoContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-left: 20px;
+}
+
+.detail {
+  margin: 1em;
+}
+
+/* rgba(221, 86, 28, 0.7) ora
+rgba(247, 63, 63, 0.7) red
+rgba(102, 172, 197, 0.4)
+*/
