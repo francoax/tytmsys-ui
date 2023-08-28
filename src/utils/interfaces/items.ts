@@ -25,3 +25,14 @@ export default interface ItemsResponse {
   error : boolean
 }
 
+export interface onDeposit {
+  id? : number,
+  amount : number,
+  dollarAtDate : number,
+  totalPrice : number
+}
+
+export interface onWithdraw {
+  id? : number,
+  amount : number
+}

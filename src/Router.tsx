@@ -1,6 +1,5 @@
 import ItemDetail from 'components/items/itemDetail'
-import Deposit from 'components/items/itemDeposit'
-import Withdraw from 'components/items/itemWithdraw'
+import ItemMovement from 'components/items/itemMovement'
 import List from 'components/items/productsList'
 import Layout from 'components/layout'
 import StockHistory from 'components/stock'
@@ -16,8 +15,8 @@ const Router = () => {
           <Route path='/' element={<Layout />} >
             <Route index element={<List />} />
             <Route path=':id' element={<ItemDetail />} />
-            <Route path=':id/agregarStock' element={<Deposit />} />
-            <Route path=':id/retirarStock' element={<Withdraw />} />
+            <Route path=':id/agregarStock' element={<ItemMovement />} />
+            <Route path=':id/retirarStock' element={<ItemMovement />} />
             <Route path='historial' element={<StockHistory />} />
             <Route path='*' element={<h1>404</h1>} />
           </Route>

@@ -14,21 +14,23 @@ import styles from './items.module.css'
 import { useNavigate } from 'react-router-dom';
 import { Item } from 'utils/interfaces/items';
 import { setModalContent, showModal } from 'utils/redux/slices/modalSlice';
+import { useEffect } from 'react';
+import { getItems } from 'utils/redux/slices/itemSlice';
 
 export default function BasicTable() {
 
-  const {list, isLoading, error} = useAppSelector((state) => state.items)
+  const {list, isLoading} = useAppSelector((state) => state.items)
 
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    dispatch(getItems())
+  }, [dispatch])
+
   if(isLoading) {
     return <h1>Loading ...</h1>
-  }
-
-  if(error) {
-    return <p>{error}</p>
   }
 
   const deleteItem = (item : Item) => {
@@ -36,12 +38,13 @@ export default function BasicTable() {
 
     dispatch(setModalContent({
       title : `Eliminar ${item.name}`,
-      message : 'Estas seguro de que lo queres eliminar ?'
+      message : 'Estas seguro de que lo queres eliminar ?',
+      action : ''
     }))
   }
 
   return (
-    <div className={styles.tableContainer}>
+    <div className={styles.container}>
       <Button sx={{ marginBottom : '2em'}} variant='contained'>Añadir nuevo producto</Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -66,7 +69,7 @@ export default function BasicTable() {
                 <TableCell>{item.category}</TableCell>
                 <TableCell align='left' sx={{ fontWeight : 700 }}>{item.actualStock} {item.unit}</TableCell>
                 <TableCell align='center'>
-                  <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                  <ButtonGroup sx={{'boxShadow' : 'none'}} variant="contained" aria-label="outlined primary button group">
                     <Button onClick={() => navigate(`/${item.id}/agregarStock`)} sx={{ backgroundColor : '#028a0f'}}>Agregar stock</Button>
                     <Button onClick={() => navigate(`/${item.id}/retirarStock`)} sx={{ margin : '0 2em', backgroundColor : '#dd571c'}}>Retirar stock</Button>
                     <Button onClick={() => deleteItem(item)} sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>

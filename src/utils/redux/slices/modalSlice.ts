@@ -3,13 +3,15 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 interface Modal {
   title : string,
   message : string,
-  isShown? : boolean
+  isShown? : boolean,
+  action : unknown
 }
 
 const initialState : Modal = {
   title : '',
   message : '',
-  isShown : false
+  isShown : false,
+  action : ''
 }
 
 export const modalSlice = createSlice({
@@ -25,6 +27,7 @@ export const modalSlice = createSlice({
     setModalContent : (state, { payload} : PayloadAction<Modal>) => {
       state.message = payload.message
       state.title = payload.title
+      state.action = payload.action
     }
   }
 })

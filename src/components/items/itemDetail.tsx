@@ -16,8 +16,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import Button from '@mui/material/Button';
-import { useAppDispatch, useAppSelector } from 'utils/redux/hooks';
-import { Item } from 'utils/interfaces/items';
+import { useAppSelector } from 'utils/redux/hooks';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import styles from './items.module.css'
@@ -126,7 +125,7 @@ export default function CustomPaginationActionsTable() {
   };
 
   return (
-    <div style={{'marginTop' : '3em'}}>
+    <div className={styles.container}>
       <div className={styles.buttons}>
         <Button onClick={() => navigate(-1)} variant='contained'>Volver</Button>
         <Button variant='contained'>Editar producto</Button>
@@ -179,19 +178,23 @@ export default function CustomPaginationActionsTable() {
                 {sm.action.toUpperCase()}
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                {sm.amount}
+                {sm.amount} <span style={{'fontSize' : '0.8rem'}}>{item?.unit}</span>
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                {sm.realAmountUsed}
+                {sm.realAmountUsed === 0 && sm.action === 'retiro' ? 'En espera de confirmacion' :
+                <>
+                {sm.realAmountUsed} <span style={{'fontSize' : '0.8rem'}}>{item?.unit}</span>
+                </> }
+
               </TableCell>
               <TableCell style={{ width: 160 }} align='center'>
                 {sm.state?.toUpperCase()}
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                ${sm.totalPrice}
+                {sm.totalPrice === 0 ? '-' : `$${sm.totalPrice}`}
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                U$S{sm.dollarAtDate}
+                {sm.dollarAtDate === 0 ? '-' : `U$S${sm.dollarAtDate}`}
               </TableCell>
               <TableCell style={{ width: 160 }}>
                 {sm.dateOfAction.toString()}

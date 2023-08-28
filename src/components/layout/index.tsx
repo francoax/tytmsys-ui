@@ -1,20 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { useAppDispatch } from 'utils/redux/hooks'
 
 import styles from './layout.module.css'
 
-import { getItems } from 'utils/redux/slices/itemSlice'
 import Modal from 'components/common/modal'
+import Toast from 'components/common/toast'
 
 const Layout = () => {
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getItems())
-  }, [dispatch])
-
   return (
     <>
       <header className={styles.header}>
@@ -33,6 +25,7 @@ const Layout = () => {
         <p className={styles.copy}>TyT S.H Copyright &copy; 2023</p>
       </footer>
       <Modal />
+      <Toast />
     </>
   )
 }

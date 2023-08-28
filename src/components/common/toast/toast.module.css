@@ -1,0 +1,24 @@
+.toast {
+  position: fixed;
+  top: 2em;
+  right: 2em;
+  min-width: 300px;
+  min-height: 80px;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #1565c0;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  width: inherit;
+  font-size: 1rem;
+}
+
+.content p {
+  width: 250px;
+  font-size: 1rem;
+  word-wrap: break-word;
+}

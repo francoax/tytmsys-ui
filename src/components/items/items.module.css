@@ -1,4 +1,4 @@
-.tableContainer {
+.container {
   margin-top: 3rem;
 }
 
@@ -35,6 +35,71 @@
 
 .detail {
   margin: 1em;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+  padding: 2%;
+  width: 600px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.formGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 550px;
+  min-height: 70px;
+  margin: 1em;
+}
+
+
+.formButtons {
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+  gap: 20px;
+  width: 100%;
+}
+
+.input input {
+  border: none;
+  border: 1.5px solid gray;
+  width: 175px;
+  height: 25px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.label {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.label span {
+  font-size: 0.8rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputError {
+  font-size: 0.8rem;
+  color: red;
 }
 
 /* rgba(221, 86, 28, 0.7) ora
