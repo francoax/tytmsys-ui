@@ -14,12 +14,25 @@ import styles from './items.module.css'
 import { useNavigate } from 'react-router-dom';
 import { Item } from 'utils/interfaces/items';
 import { setModalContent, showModal } from 'utils/redux/slices/modalSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getItems } from 'utils/redux/slices/itemSlice';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Box } from '@mui/material';
+import { getCategories } from 'utils/services/categoriesService';
+import Categories from 'utils/interfaces/categories';
 
 export default function BasicTable() {
 
   const {list, isLoading} = useAppSelector((state) => state.items)
+
+  const [filter, setFilter] = useState<Item[]>(list)
+
+  const [categoryForFilter, setCategoryFilter] = useState<string>()
+
+  const [categories, setCategories] = useState<Categories>()
 
   const navigate = useNavigate()
 
@@ -27,10 +40,27 @@ export default function BasicTable() {
 
   useEffect(() => {
     dispatch(getItems())
+
+    const set = async () => {
+      const data = await getCategories()
+
+      setCategories(data)
+    }
+
+    set()
   }, [dispatch])
 
   if(isLoading) {
     return <h1>Loading ...</h1>
+  }
+
+  const filterList = (event : SelectChangeEvent) => {
+
+    setCategoryFilter(event.target.value as string)
+
+    const filtered = list.filter((item) => item.category === event.target.value as string)
+
+    setFilter(filtered)
   }
 
   const deleteItem = (item : Item) => {
@@ -45,7 +75,25 @@ export default function BasicTable() {
 
   return (
     <div className={styles.container}>
-      <Button sx={{ marginBottom : '2em'}} variant='contained'>Añadir nuevo producto</Button>
+      <div className={styles.listButtons}>
+        <Button sx={{ marginBottom : '2em'}} variant='contained'>Añadir nuevo producto</Button>
+        <Box sx={{ minWidth : 350}}>
+          <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Filtrar por categoria</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={categoryForFilter}
+            label="Filtrar por categoria"
+            onChange={filterList}
+          >
+            {categories?.data.map((cat, index) => (
+              <MenuItem key={index} value={cat.name}>{cat.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        </Box>
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -59,7 +107,7 @@ export default function BasicTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {list.map((item, index) => (
+            {filter?.map((item, index) => (
               <TableRow
                 key={index}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
