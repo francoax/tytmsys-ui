@@ -20,6 +20,8 @@ import { useAppSelector } from 'utils/redux/hooks';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import styles from './items.module.css'
+import TopButtons from 'components/common/buttons/topButtonOptions';
+import BackButton from 'components/common/buttons/backButton';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -125,11 +127,11 @@ export default function CustomPaginationActionsTable() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.buttons}>
-        <Button onClick={() => navigate(-1)} variant='contained'>Volver</Button>
-        <Button variant='contained'>Editar producto</Button>
-      </div>
+    <>
+      <TopButtons>
+        <BackButton />
+        <Button variant='contained'>Editar Producto</Button>
+      </TopButtons>
       <h1 className={styles.title}>Detalle de producto <span>{item?.name}</span></h1>
       <div className={styles.itemInfoContainer}>
         <div className={styles.detail}>
@@ -229,6 +231,6 @@ export default function CustomPaginationActionsTable() {
         </TableFooter>
       </Table>
     </TableContainer>
-    </div>
+    </>
   );
 }

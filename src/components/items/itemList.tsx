@@ -5,17 +5,18 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import TopButtons from 'components/common/buttons/topButtonOptions'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Item from 'utils/models/items'
 import { useAppSelector } from 'utils/redux/hooks'
+import ItemManagement from './forms/itemManagement'
 
 type ListProps = {
   deleteItem : (item : Item) => void
@@ -27,6 +28,7 @@ const ListOfItems = (props : ListProps) => {
   const categoryStore = useAppSelector((state) => state.categories)
 
   const [filter, setFilter] = useState<Item[]>()
+  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
     setFilter(itemStore.list)
@@ -44,8 +46,8 @@ const ListOfItems = (props : ListProps) => {
   const navigate = useNavigate()
   return (
     <>
-      <Stack direction='row' spacing={15} sx={{ padding : '2em 0'}}>
-          <Button onClick={() => navigate('/nuevoProducto')} variant='contained'>Añadir nuevo producto</Button>
+      <TopButtons>
+          <Button onClick={() => setShowForm(true)} variant='contained'>Añadir nuevo producto</Button>
           <FormControl>
             <InputLabel id="demo-simple-select-label">Filtrar por categoria</InputLabel>
             <Select
@@ -62,7 +64,7 @@ const ListOfItems = (props : ListProps) => {
               ))}
             </Select>
           </FormControl>
-        </Stack>
+        </TopButtons>
           <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -98,6 +100,7 @@ const ListOfItems = (props : ListProps) => {
             </TableBody>
           </Table>
         </TableContainer>
+        {showForm && <ItemManagement showHandler={setShowForm} use='create' />}
       </>
   )
 }

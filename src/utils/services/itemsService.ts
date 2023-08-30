@@ -7,7 +7,7 @@ const ItemsService = {
     return api.get<TyTApiResponse>('/items')
   },
   createItem : function(item : ItemAgent) {
-    return api.post('/items', item)
+    return api.post<TyTApiResponse>('/items', item)
   },
   depositStock : function(deposit : onItemDeposit) {
     return api.post(`/items/movements/deposit/${deposit.id}`, {

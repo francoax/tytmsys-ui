@@ -51,6 +51,9 @@ export const itemSlice = createSlice({
   name: 'item',
   initialState,
   reducers: {
+    pushItem : (state, action) => {
+      state.list.push(action.payload)
+    }
   },
   extraReducers : (builder) => {
     configureBuilderGetItems(builder)
@@ -79,4 +82,5 @@ export const itemSlice = createSlice({
   }
 })
 
+export const { pushItem } = itemSlice.actions
 export default itemSlice.reducer

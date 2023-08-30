@@ -1,4 +1,4 @@
-import NewItem from 'components/items/forms/newItemForm'
+import ItemManagement from 'components/items/forms/itemManagement'
 import ItemDetail from 'components/items/itemDetail'
 import ItemMovement from 'components/items/itemMovement'
 import List from 'components/items'
@@ -16,7 +16,7 @@ const Router = () => {
           <Route path='/' element={<Layout />} >
             <Route index element={<List />} />
             <Route path=':id' element={<ItemDetail />} />
-            <Route path='/nuevoProducto' element={<NewItem />} />
+            <Route path='/nuevoProducto' element={<ItemManagement />} />
             <Route path=':id/agregarStock' element={<ItemMovement />} />
             <Route path=':id/retirarStock' element={<ItemMovement />} />
             <Route path='historial' element={<StockHistory />} />
