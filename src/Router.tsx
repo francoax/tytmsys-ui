@@ -1,6 +1,7 @@
+import NewItem from 'components/items/forms/newItemForm'
 import ItemDetail from 'components/items/itemDetail'
 import ItemMovement from 'components/items/itemMovement'
-import List from 'components/items/productsList'
+import List from 'components/items'
 import Layout from 'components/layout'
 import StockHistory from 'components/stock'
 import React, { Suspense } from 'react'
@@ -15,6 +16,7 @@ const Router = () => {
           <Route path='/' element={<Layout />} >
             <Route index element={<List />} />
             <Route path=':id' element={<ItemDetail />} />
+            <Route path='/nuevoProducto' element={<NewItem />} />
             <Route path=':id/agregarStock' element={<ItemMovement />} />
             <Route path=':id/retirarStock' element={<ItemMovement />} />
             <Route path='historial' element={<StockHistory />} />

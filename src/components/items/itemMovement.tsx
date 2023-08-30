@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { setModalContent, showModal } from 'utils/redux/slices/modalSlice';
 import { addStock, retireStock } from 'utils/redux/slices/itemSlice';
 import { SubmitHandler } from 'react-hook-form';
-import { onDeposit, onWithdraw } from 'utils/interfaces/items';
+import { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 
 import Deposit from './forms/depositForm';
 import Withdraw from './forms/withdrawForm';
@@ -20,7 +20,7 @@ const ItemMovement = () => {
 
   const location = useLocation()
 
-  const onSubmitDeposit : SubmitHandler<onDeposit> = (data) => {
+  const onSubmitDeposit : SubmitHandler<onItemDeposit> = (data) => {
     dispatch(showModal())
 
     dispatch(setModalContent({
@@ -35,7 +35,7 @@ const ItemMovement = () => {
     }))
   }
 
-  const onSubmitWithdraw : SubmitHandler<onWithdraw> = (data) => {
+  const onSubmitWithdraw : SubmitHandler<onItemWithdraw> = (data) => {
     dispatch(showModal())
 
     dispatch(setModalContent({

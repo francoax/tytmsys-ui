@@ -1,11 +1,13 @@
 import api from './index'
-import Categories from 'utils/interfaces/categories'
+import TyTApiResponse from 'utils/models/commons'
 
-
-export const getCategories = async () => {
-
-  const response = await api.get('/categories')
-  const data = response.data as Categories
-
-  return data
+const CategoriesService = {
+  getCategories : function() {
+    return api.get<TyTApiResponse>('/categories')
+  },
+  addCategory : function() {
+    return api.post('/categories', {})
+  }
 }
+
+export default CategoriesService

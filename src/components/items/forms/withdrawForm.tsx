@@ -1,14 +1,14 @@
 import React from 'react'
 
 import styles from '../items.module.css'
-import { Item, onWithdraw } from 'utils/interfaces/items'
+import Item, { onItemWithdraw } from 'utils/models/items'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button'
 
 interface WithdrawProps {
   item? : Item
-  onSubmit : SubmitHandler<onWithdraw>
+  onSubmit : SubmitHandler<onItemWithdraw>
 }
 
 const Withdraw = (props : WithdrawProps) => {
@@ -17,7 +17,7 @@ const Withdraw = (props : WithdrawProps) => {
     register,
     handleSubmit,
     formState : {errors}
-  } = useForm<onWithdraw>()
+  } = useForm<onItemWithdraw>()
 
   const navigate = useNavigate()
 

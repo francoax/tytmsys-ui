@@ -3,12 +3,12 @@ import React from 'react'
 import styles from '../items.module.css'
 import Button from '@mui/material/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Item, onDeposit } from 'utils/interfaces/items'
+import Item, { onItemDeposit } from 'utils/models/items'
 import { useNavigate } from 'react-router-dom'
 
 interface DepositProps {
   item? : Item,
-  onSubmit : SubmitHandler<onDeposit>
+  onSubmit : SubmitHandler<onItemDeposit>
 }
 
 const Deposit = (props : DepositProps) => {
@@ -17,7 +17,7 @@ const Deposit = (props : DepositProps) => {
     register,
     handleSubmit,
     formState : {errors}
-  } = useForm<onDeposit>()
+  } = useForm<onItemDeposit>()
 
   const navigate = useNavigate()
 

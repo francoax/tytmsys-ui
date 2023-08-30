@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import StockHistory, { StockMovements } from 'utils/interfaces/stockHistory'
+import { StockMovements } from 'utils/models/stockMovements'
 import api from 'utils/services'
 
 interface Stock {
@@ -18,8 +18,8 @@ export const getStockMovements = createAsyncThunk(
   'stock/movements',
   async () => {
     const response = await api.get('/items/movements')
-    const data : StockHistory = response.data;
-    return data.data
+    const data : StockMovements[] = response.data;
+    return data
   }
 )
 

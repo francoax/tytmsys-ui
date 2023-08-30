@@ -1,7 +1,12 @@
-export default interface StockHistory {
-  message : string,
-  data : StockMovements[],
-  error : boolean
+export interface StockMovement {
+  id : number,
+  action : string,
+  amount? : number,
+  realAmountUsed? : number,
+  state : string,
+  totalPrice : number,
+  dollarAtDate : number,
+  dateOfAction : Date
 }
 
 export interface StockMovements {
