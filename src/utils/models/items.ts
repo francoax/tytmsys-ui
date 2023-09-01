@@ -14,9 +14,7 @@ export interface ItemAgent {
   name : string,
   unitId : number,
   categoryId : number,
-  suppliers? : {
-    supplierId : number
-  }[]
+  suppliers? : number[] | { supplierId : number }[] | undefined
 }
 
 export interface onItemDeposit {

@@ -62,7 +62,14 @@ const Sidebar = () => {
       </List>
       <Divider />
       <List>
-        {['Proveedores', 'Categorias', 'Unidades'].map((text, index) => (
+        <NavLink to={'/proveedores'}  className={({ isActive }) => isActive ? `${styles.navlinkActive}` : `${styles.navLink}`}>
+          <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText primary={'Proveedores'} />
+              </ListItemButton>
+            </ListItem>
+        </NavLink>
+        {['Categorias', 'Unidades'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemText primary={text} />
