@@ -1,14 +1,20 @@
 import React from 'react'
 
-import styles from '../items.module.css'
+import styles from './forms.module.css'
 import Button from '@mui/material/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import Item, { onItemDeposit } from 'utils/models/items'
-import { useNavigate } from 'react-router-dom'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import ButtonGroup from '@mui/material/ButtonGroup'
+import { Movement } from '../itemMovement'
 
-interface DepositProps {
+type DepositProps = {
   item? : Item,
-  onSubmit : SubmitHandler<onItemDeposit>
+  onSubmit : SubmitHandler<onItemDeposit>,
+  showFormHandler? : (value: React.SetStateAction<Movement>) => void;
 }
 
 const Deposit = (props : DepositProps) => {
@@ -19,36 +25,56 @@ const Deposit = (props : DepositProps) => {
     formState : {errors}
   } = useForm<onItemDeposit>()
 
-  const navigate = useNavigate()
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit(props.onSubmit)}>
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Cantidad a ingresar <span>({props.item?.unit})</span></label>
-        <div className={styles.input}>
-          <input {...register("amount", {required : 'Este campo es requerido'})} type="text" />
-          {errors.amount && <span className={styles.inputError}>{errors.amount.message}</span>}
-        </div>
-      </div>
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Dolar a la fecha U$S</label>
-        <div className={styles.input}>
-          <input {...register("dollarAtDate", {required : 'Este campo es requerido'})} type="text" />
-          {errors.dollarAtDate && <span className={styles.inputError}>{errors.dollarAtDate.message}</span>}
-        </div>
-      </div>
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Costo por ingreso $</label>
-        <div className={styles.input}>
-          <input {...register("totalPrice", {required : 'Este campo es requerido'})} type="text" />
-          {errors.totalPrice && <span className={styles.inputError}>{errors.totalPrice.message}</span>}
-        </div>
-      </div>
-      <div className={styles.formButtons}>
-        <Button type='submit' variant='contained'>Aceptar</Button>
-        <Button onClick={() => navigate(-1)}>Cancelar</Button>
-      </div>
-    </form>
+    <div className={styles.formContainer}>
+      <Box
+                component="form"
+        className={styles.form}
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(props.onSubmit)}
+      >
+        <h2 className={styles.formTitle}>Agregar stock para el Item <span>{props.item?.name.toUpperCase()}</span></h2>
+        <Stack direction='column' alignItems='center' spacing={8}>
+          <FormControl sx={{width : 300}}>
+            <TextField
+              {...register("amount", { required : 'Este campo es requerido'})}
+              error={errors.amount ? true : undefined}
+              helperText={errors.amount?.message}
+              label={`Cantidad (${props.item?.unit})`}
+              variant='outlined'
+            />
+          </FormControl>
+          <FormControl sx={{width : 300}}>
+            <TextField
+              {...register("dollarAtDate", { required : 'Este campo es requerido'})}
+              error={errors.amount ? true : undefined}
+              helperText={errors.dollarAtDate?.message}
+              label="Dolar a la fecha U$S"
+              variant='outlined'
+            />
+          </FormControl>
+          <FormControl sx={{width : 300}}>
+            <TextField
+              {...register("totalPrice", { required : 'Este campo es requerido'})}
+              error={errors.amount ? true : undefined}
+              helperText={errors.totalPrice?.message}
+              label="Precio Total por ingreso"
+              variant='outlined'
+            />
+          </FormControl>
+        </Stack>
+        <ButtonGroup
+          className={styles.buttonGroup}
+          disableElevation
+          variant="contained"
+          aria-label="Disabled elevation buttons"
+        >
+         <Button type={'submit'} variant='contained'>Agregar</Button>
+         <Button type={'button'} onClick={() => props.showFormHandler?.({show : false})} variant='outlined'>Cancelar</Button>
+        </ButtonGroup>
+      </Box>
+    </div>
   )
 }
 

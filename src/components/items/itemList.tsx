@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import Item from 'utils/models/items'
 import { useAppSelector } from 'utils/redux/hooks'
 import ItemManagement from './forms/itemManagement'
+import ItemMovement, { Movement } from './itemMovement'
 
 type ListProps = {
   deleteItem : (item : Item) => void
@@ -27,8 +28,13 @@ const ListOfItems = (props : ListProps) => {
   const itemStore = useAppSelector((state) => state.items)
   const categoryStore = useAppSelector((state) => state.categories)
 
-  const [filter, setFilter] = useState<Item[]>()
   const [showForm, setShowForm] = useState(false)
+
+  const [showMovementForm, setMovementFormView] = useState<Movement>({show : false})
+
+
+  const [filter, setFilter] = useState<Item[]>()
+  const [categoryFiltered, setCategoryFilter] = useState('')
 
   useEffect(() => {
     setFilter(itemStore.list)
@@ -37,9 +43,11 @@ const ListOfItems = (props : ListProps) => {
 
   const filterList = (event : SelectChangeEvent) => {
     if(event.target.value === 'todos') {
+      setCategoryFilter('')
       setFilter(itemStore.list)
       return
     }
+    setCategoryFilter(event.target.value)
     setFilter(itemStore.list.filter((item) => item.category === event.target.value))
   }
 
@@ -54,7 +62,7 @@ const ListOfItems = (props : ListProps) => {
               sx={{ minWidth : 350}}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={''}
+              value={'' || categoryFiltered}
               label="Filtrar por categoria"
               onChange={filterList}
             >
@@ -89,8 +97,8 @@ const ListOfItems = (props : ListProps) => {
                   <TableCell align='left' sx={{ fontWeight : 700 }}>{item.actualStock} {item.unit}</TableCell>
                   <TableCell align='center'>
                     <ButtonGroup sx={{'boxShadow' : 'none'}} variant="contained" aria-label="outlined primary button group">
-                      <Button onClick={() => navigate(`/${item.id}/agregarStock`)} sx={{ backgroundColor : '#028a0f'}}>Agregar stock</Button>
-                      <Button onClick={() => navigate(`/${item.id}/retirarStock`)} sx={{ margin : '0 2em', backgroundColor : '#dd571c'}}>Retirar stock</Button>
+                      <Button onClick={() => setMovementFormView({action : 'add', id : item.id, show: true, displayHandler: setMovementFormView})} sx={{ backgroundColor : '#028a0f'}}>Agregar stock</Button>
+                      <Button onClick={() => setMovementFormView({action : 'retire', id : item.id, show: true, displayHandler: setMovementFormView})} sx={{ margin : '0 2em', backgroundColor : '#dd571c'}}>Retirar stock</Button>
                       <Button onClick={() => props.deleteItem(item)} sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>
                     </ButtonGroup>
                   </TableCell>
@@ -101,6 +109,8 @@ const ListOfItems = (props : ListProps) => {
           </Table>
         </TableContainer>
         {showForm && <ItemManagement showHandler={setShowForm} use='create' />}
+        {showMovementForm.show && <ItemMovement {...showMovementForm} />}
+        {}
       </>
   )
 }

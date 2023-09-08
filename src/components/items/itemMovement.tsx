@@ -1,9 +1,6 @@
 import React from 'react'
 
-import styles from './items.module.css'
-import { useNavigate, useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks';
-import Button from '@mui/material/Button';
 import { setModalContent, showModal } from 'utils/redux/slices/modalSlice';
 import { addStock, retireStock } from 'utils/redux/slices/itemSlice';
 import { SubmitHandler } from 'react-hook-form';
@@ -11,14 +8,17 @@ import { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 
 import Deposit from './forms/depositForm';
 import Withdraw from './forms/withdrawForm';
-import { useLocation } from 'react-router-dom';
 
-const ItemMovement = () => {
+export type Movement = {
+  action? : string,
+  id? : number,
+  show : boolean,
+  displayHandler? : (value: React.SetStateAction<Movement>) => void
+}
+
+
+const ItemMovement = (props : Movement) => {
   const dispatch = useAppDispatch()
-  const { id } = useParams()
-  const navigate = useNavigate()
-
-  const location = useLocation()
 
   const onSubmitDeposit : SubmitHandler<onItemDeposit> = (data) => {
     dispatch(showModal())
@@ -48,23 +48,17 @@ const ItemMovement = () => {
     }))
   }
 
-  const item = useAppSelector((state) => state.items.list.find((it) => it.id.toString() === id))
+  const item = useAppSelector((state) => state.items.list.find((it) => it.id === props?.id))
 
   return (
-    <div className={styles.container}>
-      <div className={styles.buttons}>
-        <Button onClick={() => navigate(-1)} variant='contained'>Volver</Button>
-      </div>
-      <h2 className={styles.title}>Ingresar stock para el producto {item?.name.toUpperCase()}</h2>
-      <div className={styles.formContainer}>
-        {location.pathname.includes('agregar')
+    <>
+        {props.action === 'add'
           ?
-            <Deposit onSubmit={onSubmitDeposit} item={item} />
+            <Deposit onSubmit={onSubmitDeposit} item={item} showFormHandler={props.displayHandler} />
           :
-            <Withdraw onSubmit={onSubmitWithdraw} item={item} />
+            <Withdraw onSubmit={onSubmitWithdraw} item={item} showFormHandler={props.displayHandler} />
         }
-      </div>
-    </div>
+    </>
   )
 }
 

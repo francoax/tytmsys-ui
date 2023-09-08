@@ -6,13 +6,11 @@ import { closeModal } from 'utils/redux/slices/modalSlice'
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
 import Button from '@mui/material/Button'
 import { AnyAction } from '@reduxjs/toolkit'
-import { useNavigate } from 'react-router-dom'
 
 
 const Modal = () => {
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const modalProp = useAppSelector((state) => state.modal);
 
@@ -23,7 +21,6 @@ const Modal = () => {
   const handleClick = () => {
     dispatch(modalProp.action as AnyAction)
     dispatch(closeModal())
-    setTimeout(() => navigate(-1), 500)
   }
 
   return (

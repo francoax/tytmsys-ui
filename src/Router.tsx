@@ -1,6 +1,5 @@
 import ItemManagement from 'components/items/forms/itemManagement'
 import ItemDetail from 'components/items/itemDetail'
-import ItemMovement from 'components/items/itemMovement'
 import ListOfItems from 'components/items'
 import Layout from 'components/layout'
 import StockHistory from 'components/stockHistory'
@@ -19,8 +18,6 @@ const Router = () => {
             <Route index element={<ListOfItems />} />
             <Route path=':id' element={<ItemDetail />} />
             <Route path='/nuevoProducto' element={<ItemManagement />} />
-            <Route path=':id/agregarStock' element={<ItemMovement />} />
-            <Route path=':id/retirarStock' element={<ItemMovement />} />
 
             <Route path='/proveedores' element={<Suppliers />} />
             {/* <Route path='/proveedores/agregar' element={<Suppliers />} />
