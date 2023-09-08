@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import Item, { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 import { setContent, showToast } from './toastSlice';
 import ItemsService from 'utils/services/itemsService';
-import { configureBuilderGetItems } from '../thunks/itemsThunks';
+import { configureBuilderDeleteItem, configureBuilderGetItems } from '../thunks/itemsThunks';
 
 
 type KnownError = {
@@ -57,6 +57,8 @@ export const itemSlice = createSlice({
   },
   extraReducers : (builder) => {
     configureBuilderGetItems(builder)
+
+    configureBuilderDeleteItem(builder)
 
     builder.addCase(addStock.pending, (state) => {
       state.isLoading = true

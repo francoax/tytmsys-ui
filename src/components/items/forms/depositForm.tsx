@@ -59,7 +59,7 @@ const Deposit = (props : DepositProps) => {
               {...register("totalPrice", { required : 'Este campo es requerido'})}
               error={errors.amount ? true : undefined}
               helperText={errors.totalPrice?.message}
-              label="Precio Total por ingreso"
+              label="Precio total por ingreso"
               variant='outlined'
             />
           </FormControl>

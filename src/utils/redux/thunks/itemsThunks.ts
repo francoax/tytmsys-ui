@@ -36,6 +36,22 @@ export const postItem = createAsyncThunk(
   }
 )
 
+export const deleteItem = createAsyncThunk(
+  'item/delete',
+  async (id : number, { dispatch }) => {
+    try {
+      const { data } = await ItemsService.deleteItem(id)
+
+      dispatch(setContent(data.message))
+      dispatch(showToast())
+
+      return null
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+
 export const configureBuilderGetItems = (builder : ActionReducerMapBuilder<ItemState>) => {
   builder.addCase(getItems.pending, (state) => {
     state.isLoading = true
@@ -45,6 +61,21 @@ export const configureBuilderGetItems = (builder : ActionReducerMapBuilder<ItemS
     state.list = action.payload as Item[]
   })
   builder.addCase(getItems.rejected, (state, action) => {
+    state.isLoading = false
+    state.error = action.payload as KnownError
+  })
+}
+
+export const configureBuilderDeleteItem = (builder : ActionReducerMapBuilder<ItemState>) => {
+  builder.addCase(deleteItem.pending, (state) => {
+    state.isLoading = true
+  })
+
+  builder.addCase(deleteItem.fulfilled, (state) => {
+    state.isLoading = false
+  })
+
+  builder.addCase(deleteItem.rejected, (state, action) => {
     state.isLoading = false
     state.error = action.payload as KnownError
   })

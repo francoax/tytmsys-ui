@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks';
 
 import { getCategories } from 'utils/redux/thunks/categoriesThunks';
-import { getItems } from 'utils/redux/thunks/itemsThunks';
+import { deleteItem, getItems } from 'utils/redux/thunks/itemsThunks';
 import ListOfItems from './itemList';
 import Item from 'utils/models/items';
 import { setModalContent, showModal } from 'utils/redux/slices/modalSlice';
@@ -19,19 +19,19 @@ export default function BasicTable() {
     dispatch(getItems())
   }, [dispatch])
 
-  const deleteItem = (item : Item) => {
+  const onDeleteItem = (item : Item) => {
   dispatch(showModal())
 
   dispatch(setModalContent({
     title : `Eliminar ${item.name}`,
     message : 'Estas seguro de que lo queres eliminar ?',
-    action : ''
+    action : deleteItem(item.id)
   }))
   }
 
   return (
     <>
-      {!itemsStore.isLoading && !categoriesStore.isLoading && <ListOfItems deleteItem={deleteItem} /> }
+      {!itemsStore.isLoading && !categoriesStore.isLoading && <ListOfItems deleteItem={onDeleteItem} /> }
     </>
   );
 }

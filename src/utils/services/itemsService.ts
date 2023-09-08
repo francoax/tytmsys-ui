@@ -9,6 +9,9 @@ const ItemsService = {
   createItem : function(item : ItemAgent) {
     return api.post<TyTApiResponse>('/items', item)
   },
+  deleteItem : (id : number) => {
+    return api.delete<TyTApiResponse>(`/items/${id}`)
+  },
   depositStock : function(deposit : onItemDeposit) {
     return api.post(`/items/movements/deposit/${deposit.id}`, {
       amount : deposit.amount,

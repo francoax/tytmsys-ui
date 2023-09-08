@@ -73,7 +73,7 @@ const ListOfItems = (props : ListProps) => {
             </Select>
           </FormControl>
         </TopButtons>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ maxHeight: '75vh' }}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>

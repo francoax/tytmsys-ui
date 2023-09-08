@@ -12,12 +12,15 @@ const Toast = () => {
   const toastProps = useAppSelector((state) => state.toast)
 
   useEffect(() => {
-    setTimeout(() => dispatch(resetState()), 2500)
-  }, [dispatch])
-
-  if(!toastProps.isShown) {
-    return null
-  }
+    const timer = setTimeout(() => {
+      dispatch(closeToast());
+    }, 2500);
+    return () => {
+      clearTimeout(timer);
+      dispatch(resetState());
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
