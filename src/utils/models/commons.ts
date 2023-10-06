@@ -6,7 +6,7 @@ import Unit from "./units";
 
 export default interface TyTApiResponse {
   message : string,
-  data : Item[] | Category[] | Unit[] | StockMovements[] | Supplier[] | Item | undefined,
+  data : Item[] | Category[] | Unit[] | StockMovements[] | Supplier[] | Item | number | undefined,
   error : boolean
 }
 

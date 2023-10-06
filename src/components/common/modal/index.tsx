@@ -5,10 +5,12 @@ import styles from './modal.module.css'
 import { closeModal } from 'utils/redux/slices/modalSlice'
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
 import Button from '@mui/material/Button'
-import { AnyAction } from '@reduxjs/toolkit'
 
+type ModalProps = {
+  action? : any
+}
 
-const Modal = () => {
+const Modal = (props : ModalProps) => {
 
   const dispatch = useAppDispatch();
 
@@ -19,7 +21,7 @@ const Modal = () => {
   }
 
   const handleClick = () => {
-    dispatch(modalProp.action as AnyAction)
+    dispatch(props.action)
     dispatch(closeModal())
   }
 

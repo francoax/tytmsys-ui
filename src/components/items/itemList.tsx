@@ -15,18 +15,19 @@ import TopButtons from 'components/common/buttons/topButtonOptions'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Item from 'utils/models/items'
-import { useAppSelector } from 'utils/redux/hooks'
+import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
 import ItemManagement from './forms/itemManagement'
 import ItemMovement, { Movement } from './itemMovement'
+import { setModalContent, showModal } from 'utils/redux/slices/modalSlice'
+import { deleteItem } from 'utils/redux/thunks/itemsThunks'
+import Modal from 'components/common/modal'
 
-type ListProps = {
-  deleteItem : (item : Item) => void
-}
-
-const ListOfItems = (props : ListProps) => {
+const ListOfItems = () => {
 
   const itemStore = useAppSelector((state) => state.items)
   const categoryStore = useAppSelector((state) => state.categories)
+  const modal = useAppSelector((state) => state.modal)
+  const dispatch = useAppDispatch()
 
   const [showForm, setShowForm] = useState(false)
 
@@ -49,6 +50,14 @@ const ListOfItems = (props : ListProps) => {
     }
     setCategoryFilter(event.target.value)
     setFilter(itemStore.list.filter((item) => item.category === event.target.value))
+  }
+
+  const onDelete = (item : Item) => {
+    dispatch(showModal())
+    dispatch(setModalContent({
+      title : `Eliminar ${item.name}`,
+      message : 'Estas seguro de querer eliminarlo?',
+    }))
   }
 
   const navigate = useNavigate()
@@ -99,10 +108,11 @@ const ListOfItems = (props : ListProps) => {
                     <ButtonGroup sx={{'boxShadow' : 'none'}} variant="contained" aria-label="outlined primary button group">
                       <Button onClick={() => setMovementFormView({action : 'add', id : item.id, show: true, displayHandler: setMovementFormView})} sx={{ backgroundColor : '#028a0f'}}>Agregar stock</Button>
                       <Button onClick={() => setMovementFormView({action : 'retire', id : item.id, show: true, displayHandler: setMovementFormView})} sx={{ margin : '0 2em', backgroundColor : '#dd571c'}}>Retirar stock</Button>
-                      <Button onClick={() => props.deleteItem(item)} sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>
+                      <Button onClick={() => onDelete(item)} sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>
                     </ButtonGroup>
                   </TableCell>
                   <TableCell><Button onClick={() => navigate(`/${item.id}`)}>Ver detalles</Button></TableCell>
+                  {modal.isShown && <Modal action={deleteItem(item.id)}/>}
                 </TableRow>
               ))}
             </TableBody>

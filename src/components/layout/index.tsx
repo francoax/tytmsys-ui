@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom'
 
 import styles from './layout.module.css'
 
-import Modal from 'components/common/modal'
 import Toast from 'components/common/toast'
 import Sidebar from './navigation'
 import { useAppSelector } from 'utils/redux/hooks'
@@ -18,7 +17,6 @@ const Layout = () => {
       <div className={styles.container}>
         <Outlet />
       </div>
-      <Modal />
       {toastProps.isShown && <Toast />}
     </>
   )

@@ -45,7 +45,7 @@ export const deleteItem = createAsyncThunk(
       dispatch(setContent(data.message))
       dispatch(showToast())
 
-      return null
+      return data.data
     } catch (error) {
       console.log(error)
     }
@@ -71,7 +71,9 @@ export const configureBuilderDeleteItem = (builder : ActionReducerMapBuilder<Ite
     state.isLoading = true
   })
 
-  builder.addCase(deleteItem.fulfilled, (state) => {
+  builder.addCase(deleteItem.fulfilled, (state, action) => {
+    const idDeleted = action.payload as number
+    state.list = state.list.filter(i => i.id !== idDeleted)
     state.isLoading = false
   })
 

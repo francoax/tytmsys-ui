@@ -4,14 +4,13 @@ interface Modal {
   title : string,
   message : string,
   isShown? : boolean,
-  action : unknown
+  action? : any
 }
 
 const initialState : Modal = {
   title : '',
   message : '',
   isShown : false,
-  action : ''
 }
 
 export const modalSlice = createSlice({
