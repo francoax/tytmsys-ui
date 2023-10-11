@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import Item, { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 import { setContent, showToast } from './toastSlice';
 import ItemsService from 'utils/services/itemsService';
-import { configureBuilderDeleteItem, configureBuilderGetItems } from '../thunks/itemsThunks';
+import { configureBuilderConfirmWithdraw, configureBuilderDeleteItem, configureBuilderGetItems, getItems } from '../thunks/itemsThunks';
 
 
 type KnownError = {
@@ -22,10 +22,26 @@ const initialState : ItemState = {
   error: undefined
 }
 
-export const addStock = createAsyncThunk(
+export const addStock = createAsyncThunk<any, any, {rejectValue : KnownError}>(
   'items/deposit',
-  async (deposit : onItemDeposit) => {
-    return (await ItemsService.depositStock(deposit)).data.data
+  async (deposit : onItemDeposit, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await ItemsService.depositStock(deposit)
+      const itemUpdated = await ItemsService.getById(data.data)
+
+      dispatch(setContent({ content : data.message, status : 'ok'}))
+      dispatch(showToast())
+      return itemUpdated.data.data
+    } catch (err) {
+      let error : AxiosError<KnownError> = err as any
+      if(!error.response) {
+        throw err
+      }
+      dispatch(setContent({ content : error.response.data.message, status : 'error'}))
+      dispatch(showToast())
+
+      return rejectWithValue(error.response.data)
+    }
   }
 )
 
@@ -33,13 +49,18 @@ export const retireStock = createAsyncThunk<any, any, {rejectValue : KnownError}
   'items/withdraw',
   async (withdraw : onItemWithdraw, { rejectWithValue, dispatch }) => {
     try {
-      return (await ItemsService.retireStock(withdraw)).data.data
+      const {data} = await ItemsService.retireStock(withdraw)
+      const itemUpdated = await ItemsService.getById(data.data);
+
+      dispatch(setContent({ content: data.message, status: 'ok' }));
+      dispatch(showToast());
+      return itemUpdated.data.data;
     } catch (err) {
       let error : AxiosError<KnownError> = err as any
       if(!error.response) {
         throw err
       }
-      dispatch(setContent(error.response.data.message))
+      dispatch(setContent({ content : error.response.data.message, status : 'error'}))
       dispatch(showToast())
 
       return rejectWithValue(error.response.data)
@@ -60,11 +81,16 @@ export const itemSlice = createSlice({
 
     configureBuilderDeleteItem(builder)
 
+    configureBuilderConfirmWithdraw(builder)
+
     builder.addCase(addStock.pending, (state) => {
       state.isLoading = true
     })
-    builder.addCase(addStock.fulfilled, (state) => {
+    builder.addCase(addStock.fulfilled, (state, action) => {
       state.isLoading = false
+      const itemUpdated = action.payload as Item
+      const index = state.list.map(i => i.id).indexOf(itemUpdated.id)
+      state.list[index] = itemUpdated
     })
     builder.addCase(addStock.rejected, (state, action) => {
       state.isLoading = false
@@ -74,8 +100,11 @@ export const itemSlice = createSlice({
     builder.addCase(retireStock.pending, (state) => {
       state.isLoading = true
     })
-    builder.addCase(retireStock.fulfilled, (state) => {
+    builder.addCase(retireStock.fulfilled, (state, action) => {
       state.isLoading = false
+      const itemUpdated = action.payload as Item;
+      const index = state.list.map((i) => i.id).indexOf(itemUpdated.id);
+      state.list[index] = itemUpdated;
     })
     builder.addCase(retireStock.rejected, (state, action) => {
       state.isLoading = false

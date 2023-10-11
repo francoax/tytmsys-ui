@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface ToastState {
   isShown : boolean,
-  content : string
+  content : string,
+  status : string
 }
 
 const initialState : ToastState = {
   isShown : false,
-  content : ''
+  content : '',
+  status : ''
 }
 
 export const toastSilce = createSlice({
@@ -25,7 +27,8 @@ export const toastSilce = createSlice({
       state.isShown = false
     },
     setContent : (state, action) => {
-      state.content = action.payload
+      state.content = action.payload.content
+      state.status = action.payload.status
     }
   }
 })

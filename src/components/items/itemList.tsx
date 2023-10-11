@@ -22,6 +22,8 @@ import { setModalContent, showModal } from 'utils/redux/slices/modalSlice'
 import { deleteItem } from 'utils/redux/thunks/itemsThunks'
 import Modal from 'components/common/modal'
 
+import styles from './items.module.css'
+
 const ListOfItems = () => {
 
   const itemStore = useAppSelector((state) => state.items)
@@ -57,32 +59,42 @@ const ListOfItems = () => {
     dispatch(setModalContent({
       title : `Eliminar ${item.name}`,
       message : 'Estas seguro de querer eliminarlo?',
+      action : deleteItem(item.id)
     }))
   }
 
   const navigate = useNavigate()
+
+  // if(itemStore.list.length < 1) {
+  //   return (
+  //     <>
+  //       <p>No hay productos todavia... ingrese nuevos.</p>
+  //     </>
+  //   )
+  // }
   return (
     <>
       <TopButtons>
-          <Button onClick={() => setShowForm(true)} variant='contained'>Añadir nuevo producto</Button>
-          <FormControl>
-            <InputLabel id="demo-simple-select-label">Filtrar por categoria</InputLabel>
-            <Select
-              sx={{ minWidth : 350}}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={'' || categoryFiltered}
-              label="Filtrar por categoria"
-              onChange={filterList}
-            >
-              <MenuItem value={'todos'}>Todos</MenuItem>
-              {categoryStore.list?.map((cat, index) => (
-                <MenuItem key={index} value={cat.name}>{cat.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </TopButtons>
-          <TableContainer component={Paper} sx={{ maxHeight: '75vh' }}>
+        <Button onClick={() => setShowForm(true)} variant='contained'>Añadir nuevo producto</Button>
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Filtrar por categoria</InputLabel>
+          <Select
+            sx={{ minWidth : 350}}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={'' || categoryFiltered}
+            label="Filtrar por categoria"
+            onChange={filterList}
+          >
+            <MenuItem value={'todos'}>Todos</MenuItem>
+            {categoryStore.list?.map((cat, index) => (
+              <MenuItem key={index} value={cat.name}>{cat.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </TopButtons>
+      {itemStore.list.length < 1 ? 'No hay productos todavia... crea nuevos.' : (
+        <TableContainer component={Paper} sx={{ maxHeight: '75vh' }}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -103,7 +115,9 @@ const ListOfItems = () => {
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.category}</TableCell>
-                  <TableCell align='left' sx={{ fontWeight : 700 }}>{item.actualStock} {item.unit}</TableCell>
+                  <TableCell align='left' sx={{ fontWeight : 700 }}>
+                    {item.actualStock} {item.unit} {item.stockMovements.some(sm => sm.action === 'retiro' && sm.state === 'pendiente') ? <span className={styles.pendient}>Hay un retiro pendiente de {item.stockMovements.find(sm => sm.state === 'pendiente')?.amount} {item.unit}</span> : ''}
+                  </TableCell>
                   <TableCell align='center'>
                     <ButtonGroup sx={{'boxShadow' : 'none'}} variant="contained" aria-label="outlined primary button group">
                       <Button onClick={() => setMovementFormView({action : 'add', id : item.id, show: true, displayHandler: setMovementFormView})} sx={{ backgroundColor : '#028a0f'}}>Agregar stock</Button>
@@ -118,10 +132,10 @@ const ListOfItems = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {showForm && <ItemManagement showHandler={setShowForm} use='create' />}
-        {showMovementForm.show && <ItemMovement {...showMovementForm} />}
-        {}
-      </>
+      )}
+      {showForm && <ItemManagement showHandler={setShowForm} use='create' />}
+      {showMovementForm.show && <ItemMovement {...showMovementForm} />}
+    </>
   )
 }
 

@@ -107,6 +107,11 @@
   gap: 2em;
 }
 
+.pendient {
+  font-size: 0.8rem;
+  color : red
+}
+
 /* rgba(221, 86, 28, 0.7) ora
 rgba(247, 63, 63, 0.7) red
 rgba(102, 172, 197, 0.4)

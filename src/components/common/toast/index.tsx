@@ -3,7 +3,9 @@ import React, { useEffect } from 'react'
 import styles from './toast.module.css'
 import { createPortal } from 'react-dom'
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
-import { closeToast, resetState } from 'utils/redux/slices/toastSlice'
+import { closeToast } from 'utils/redux/slices/toastSlice'
+import Alert from '@mui/material/Alert'
+import Stack from '@mui/material/Stack'
 
 const Toast = () => {
 
@@ -14,10 +16,9 @@ const Toast = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(closeToast());
-    }, 2500);
+    }, 3000);
     return () => {
       clearTimeout(timer);
-      dispatch(resetState());
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -25,12 +26,17 @@ const Toast = () => {
   return (
     <>
       {createPortal(
-        <div className={styles.toast}>
-          <div className={styles.content}>
-            <p>{toastProps.content}</p>
-            <span style={{'cursor' : 'pointer'}} onClick={() => dispatch(closeToast())}>&times;</span>
-          </div>
-        </div>
+        <Stack className={styles.toast} spacing={2}>
+          <Alert variant="filled" className={styles.content} severity={ toastProps.status === 'error' ? 'error' : 'success'}>
+              <p>{toastProps.content}</p>
+          </Alert>
+        </Stack>
+        // <div className={styles.toast}>
+        //   <div className={styles.content}>
+        //     <p>{toastProps.content}</p>
+        //     <span style={{'cursor' : 'pointer'}} onClick={() => dispatch(closeToast())}>&times;</span>
+        //   </div>
+        // </div>
       ,
       document.body)}
     </>

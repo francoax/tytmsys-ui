@@ -21,3 +21,8 @@ export interface StockMovements {
   item : string,
   itemUnit : string
 }
+
+export interface ConfirmWithdraw {
+  id? : number,
+  realAmountUsed : number
+}

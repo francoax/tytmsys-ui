@@ -28,7 +28,7 @@ const Withdraw = (props : WithdrawProps) => {
 return (
     <div className={styles.formContainer}>
       <Box
-                component="form"
+        component="form"
         className={styles.form}
         noValidate
         autoComplete="off"

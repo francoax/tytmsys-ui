@@ -1,12 +1,12 @@
 .toast {
   position: fixed;
-  top: 2em;
-  right: 2em;
-  min-width: 300px;
+  top: 1em;
+  right: 1em;
+  max-width: 350px;
   min-height: 80px;
   color: #fff;
   border-radius: 5px;
-  background-color: #1565c0;
+  /* background-color: #1565c0; */
 }
 
 .content {

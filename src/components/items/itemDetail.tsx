@@ -22,6 +22,10 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import styles from './items.module.css'
 import TopButtons from 'components/common/buttons/topButtonOptions';
 import BackButton from 'components/common/buttons/backButton';
+import { StockMovement } from 'utils/models/stockMovements';
+import ConfirmWithdraw from './forms/confirmWithDrawForm';
+import { useState } from 'react';
+import Item from 'utils/models/items';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -93,12 +97,12 @@ export default function CustomPaginationActionsTable() {
 
   const { id } = useParams()
 
-  const navigate = useNavigate()
-
   // const dispatch = useAppDispatch();
   const item = useAppSelector((state) => state.items.list.find(it => it.id.toString() === id))
 
-  if(!item) {
+  const [itemDetail, setItemDetail] = useState<Item | undefined>(item)
+
+  if(!itemDetail) {
     <Navigate to="/" />
   }
 
@@ -107,7 +111,7 @@ export default function CustomPaginationActionsTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
 
-  const length = item?.stockMovements.length ?? 0;
+  const length = itemDetail?.stockMovements.length ?? 0;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - length) : 0;
@@ -126,30 +130,61 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
+  const realAmountUsed = (sm : StockMovement) => {
+
+    if(sm.action === 'retiro' && sm.state === 'pendiente') {
+      return (
+      <>
+        En espera de confirmacion
+      </>
+      )
+    }
+
+    if(sm.state !== 'pendiente' && sm.action === 'retiro') {
+      return (
+        <>
+          {sm.realAmountUsed} {itemDetail?.unit}
+        </>
+      )
+    }
+
+    if(sm.action === 'ingreso') {
+      return (
+        <>
+          -
+        </>
+      )
+    }
+
+    return ''
+  }
+
+  const [showForm, setForm] = useState<{show : boolean, id? : number}>({ show : false })
+
   return (
     <>
       <TopButtons>
         <BackButton />
         <Button variant='contained'>Editar Producto</Button>
       </TopButtons>
-      <h1 className={styles.title}>Detalle de producto <span>{item?.name}</span></h1>
+      <h1 className={styles.title}>Detalle de producto <span>{itemDetail?.name}</span></h1>
       <div className={styles.itemInfoContainer}>
         <div className={styles.detail}>
-          <p>Nombre: {item?.name}</p>
+          <p>Nombre: {itemDetail?.name}</p>
         </div>
         <div className={styles.detail}>
-          <p>Proveedores: {item?.suppliers.map((sup : string, index) =>
+          <p>Proveedores: {itemDetail?.suppliers.map((sup : string, index) =>
             (<span key={index}>{sup}, </span>))}
           </p>
         </div>
         <div className={styles.detail}>
-          <p>Categoria: {item?.category}</p>
+          <p>Categoria: {itemDetail?.category}</p>
         </div>
         <div className={styles.detail}>
-          <p>Unidad: {item?.unit}</p>
+          <p>Unidad: {itemDetail?.unit}</p>
         </div>
         <div className={styles.detail}>
-          <p>Stock actual: {item?.actualStock} {item?.unit}</p>
+          <p>Stock actual: {itemDetail?.actualStock} {item?.unit}</p>
         </div>
       </div>
       <h2 className={styles.stockTitle}>Movimientos de stock</h2>
@@ -183,14 +218,20 @@ export default function CustomPaginationActionsTable() {
                 {sm.amount} <span style={{'fontSize' : '0.8rem'}}>{item?.unit}</span>
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                {sm.realAmountUsed === 0 && sm.action === 'retiro' ? 'En espera de confirmacion' :
+                {/* {sm.realAmountUsed === 0 && sm.action === 'retiro' ? 'En espera de confirmacion' :
                 <>
                 {sm.realAmountUsed} <span style={{'fontSize' : '0.8rem'}}>{item?.unit}</span>
-                </> }
-
+                </> } */
+                realAmountUsed(sm)}
               </TableCell>
               <TableCell style={{ width: 160 }} align='center'>
-                {sm.state?.toUpperCase()}
+                {sm.state === 'pendiente' ?
+                  <div style={{ display : 'flex', alignItems : 'center', justifyContent : 'space-around'}}>
+                    <span style={{ fontSize : '1rem'}}>{sm.state?.toUpperCase()}</span>
+                    <Button variant='outlined' onClick={() => setForm({ show : true, id : sm.id})}>Confirmar</Button>
+                  </div>
+                  : ''
+              }
               </TableCell>
               <TableCell style={{ width: 160 }}>
                 {sm.totalPrice === 0 ? '-' : `$${sm.totalPrice}`}
@@ -231,6 +272,7 @@ export default function CustomPaginationActionsTable() {
         </TableFooter>
       </Table>
     </TableContainer>
+    {showForm.show && <ConfirmWithdraw id={showForm.id} item={item} displayHandler={setForm} />}
     </>
   );
 }
