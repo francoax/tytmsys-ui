@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useController, useForm } from 'react-hook-form'
-import { ItemAgent } from 'utils/models/items'
+import Item, { ItemAgent } from 'utils/models/items'
 
 import styles from './forms.module.css'
 import { Theme, useTheme } from '@mui/material/styles';
@@ -18,7 +18,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
 import UnitsService from 'utils/services/unitsService'
-import { postItem } from 'utils/redux/thunks/itemsThunks'
+import { postItem, updateItem } from 'utils/redux/thunks/itemsThunks'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
 import axios from 'axios';
@@ -48,10 +48,11 @@ const MenuProps = {
 
 type ManagementProps = {
   showHandler? : (value: React.SetStateAction<boolean>) => void,
-  use? : string
+  use? : string,
+  itemToUpdate? : Item
 }
 
-const ItemManagement = ({showHandler, use} : ManagementProps) => {
+const ItemManagement = ({showHandler, use, itemToUpdate} : ManagementProps) => {
   const theme = useTheme();
 
   const dispatch = useAppDispatch()
@@ -64,9 +65,16 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
     register,
     handleSubmit,
     formState : {errors},
-    control
+    control,
+    setValue
   } = useForm<ItemAgent>({
     mode : 'onChange',
+    defaultValues : {
+      id : itemToUpdate?.id,
+      name : itemToUpdate?.name,
+      categoryId : categoryStore.list.find(s => s.name.toLowerCase() === itemToUpdate?.category.toLowerCase())?.id,
+      suppliers : suppliers.map(sup => { if(itemToUpdate?.suppliers.includes(sup.name)) { return sup.id } return 0})
+    }
   })
 
   const {
@@ -94,12 +102,31 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
     })
   }, [dispatch])
 
+  useEffect(() => {
+    if(use === 'edit') {
+        const unit = units.find(u => u.description.toLowerCase() === itemToUpdate?.unit.toLowerCase())?.id
+        const sups = itemToUpdate?.suppliers.map(sup => {
+          const index = suppliers.map(s => s.name).indexOf(sup)
+          return suppliers.at(index)?.id
+        })
+        setValue('unitId', unit)
+        setValue('suppliers', sups)
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [units, suppliers])
+
   const onSubmit : SubmitHandler<ItemAgent> = (data) => {
-    const objectables = data.suppliers?.map((s) => ({ supplierId : s.valueOf() as number }))
+    const objectables = data.suppliers?.map((s) => ({ supplierId : s?.valueOf() as number }))
     data.suppliers = objectables
 
     showHandler?.(false)
-    dispatch(postItem(data))
+    if(use === 'create') {
+      dispatch(postItem(data))
+    }
+
+    if(use === 'edit') {
+      dispatch(updateItem(data))
+    }
   }
 
   if(loadingUnits) {
@@ -108,8 +135,6 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
 
   return (
     <div className={styles.formContainer}>
-      {use === 'create'
-      ?
       <Box
         component="form"
         sx={{
@@ -120,7 +145,7 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h2 className={styles.formTitle}>Crear nuevo producto</h2>
+        <h2 className={styles.formTitle}>{use === 'create' ? 'Crear nuevo producto' : `Editar producto ${itemToUpdate?.name.toUpperCase()}`}</h2>
         <Stack direction="row" justifyContent={'center'} sx={{minHeight : '90px'}} spacing={8}>
           <FormControl sx={{width : 300}}>
             <TextField
@@ -176,7 +201,7 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected?.map((value, index) => (
-                    <Chip key={index} label={value.toString()} />
+                    <Chip key={index} label={value?.toString()} />
                   ))}
                 </Box>
               )}
@@ -201,13 +226,10 @@ const ItemManagement = ({showHandler, use} : ManagementProps) => {
           variant="contained"
           aria-label="Disabled elevation buttons"
         >
-         <Button type={'submit'} variant='contained'>Agregar</Button>
+         <Button type={'submit'} variant='contained'>{use === 'create' ? 'Agregar' : 'Editar'}</Button>
          <Button type={'button'} onClick={() => showHandler?.(false)} variant='outlined'>Cancelar</Button>
         </ButtonGroup>
       </Box>
-      :
-      'edit'
-      }
     </div>
   )
 }

@@ -11,10 +11,11 @@ export default interface Item {
 }
 
 export interface ItemAgent {
+  id? : number,
   name : string,
-  unitId : number,
-  categoryId : number,
-  suppliers? : number[] | { supplierId : number }[] | undefined
+  unitId? : number,
+  categoryId? : number,
+  suppliers? : (number | undefined)[] | { supplierId : number }[] | undefined
 }
 
 export interface onItemDeposit {

@@ -24,8 +24,9 @@ import TopButtons from 'components/common/buttons/topButtonOptions';
 import BackButton from 'components/common/buttons/backButton';
 import { StockMovement } from 'utils/models/stockMovements';
 import ConfirmWithdraw from './forms/confirmWithDrawForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Item from 'utils/models/items';
+import ItemManagement from './forms/itemManagement';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -102,6 +103,12 @@ export default function CustomPaginationActionsTable() {
 
   const [itemDetail, setItemDetail] = useState<Item | undefined>(item)
 
+  const [showEditForm, setFormEdit] = useState(false)
+
+  useEffect(() => {
+    setItemDetail(item)
+  }, [item])
+
   if(!itemDetail) {
     <Navigate to="/" />
   }
@@ -165,7 +172,7 @@ export default function CustomPaginationActionsTable() {
     <>
       <TopButtons>
         <BackButton />
-        <Button variant='contained'>Editar Producto</Button>
+        <Button variant='contained' onClick={() => setFormEdit(true)}>Editar Producto</Button>
       </TopButtons>
       <h1 className={styles.title}>Detalle de producto <span>{itemDetail?.name}</span></h1>
       <div className={styles.itemInfoContainer}>
@@ -273,6 +280,7 @@ export default function CustomPaginationActionsTable() {
       </Table>
     </TableContainer>
     {showForm.show && <ConfirmWithdraw id={showForm.id} item={item} displayHandler={setForm} />}
+    {showEditForm && <ItemManagement itemToUpdate={itemDetail} showHandler={setFormEdit} use='edit' />}
     </>
   );
 }

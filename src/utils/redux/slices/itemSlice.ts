@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import Item, { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 import { setContent, showToast } from './toastSlice';
 import ItemsService from 'utils/services/itemsService';
-import { configureBuilderConfirmWithdraw, configureBuilderDeleteItem, configureBuilderGetItems, getItems } from '../thunks/itemsThunks';
+import { configureBuilderConfirmWithdraw, configureBuilderDeleteItem, configureBuilderGetItems, configureBuilderPostItem, configureBuilderUpdateItem } from '../thunks/itemsThunks';
 
 
 type KnownError = {
@@ -78,6 +78,10 @@ export const itemSlice = createSlice({
   },
   extraReducers : (builder) => {
     configureBuilderGetItems(builder)
+
+    configureBuilderPostItem(builder)
+
+    configureBuilderUpdateItem(builder)
 
     configureBuilderDeleteItem(builder)
 

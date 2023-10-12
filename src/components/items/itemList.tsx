@@ -59,19 +59,10 @@ const ListOfItems = () => {
     dispatch(setModalContent({
       title : `Eliminar ${item.name}`,
       message : 'Estas seguro de querer eliminarlo?',
-      action : deleteItem(item.id)
     }))
   }
 
   const navigate = useNavigate()
-
-  // if(itemStore.list.length < 1) {
-  //   return (
-  //     <>
-  //       <p>No hay productos todavia... ingrese nuevos.</p>
-  //     </>
-  //   )
-  // }
   return (
     <>
       <TopButtons>

@@ -12,6 +12,9 @@ const ItemsService = {
   createItem : function(item : ItemAgent) {
     return api.post<TyTApiResponse>('/items', item)
   },
+  updateItem : (item : ItemAgent, id? : number) => {
+    return api.put<TyTApiResponse>(`/items/${id}`, item)
+  },
   deleteItem : (id : number) => {
     return api.delete<TyTApiResponse>(`/items/${id}`)
   },
