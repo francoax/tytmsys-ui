@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit"
 
 // data storage
 import itemReducer from '../redux/slices/itemSlice'
-import stockReducer from '../redux/slices/stockHistorySlice'
+import stockReducer from './slices/stockSlice'
 import categoryReducer from '../redux/slices/categorySlice'
 
 // components
@@ -12,7 +12,7 @@ import modalReducer from '../redux/slices/modalSlice'
 const store = configureStore({
   reducer : {
     items : itemReducer,
-    stocks : stockReducer,
+    stock : stockReducer,
     categories : categoryReducer,
     toast : toastReducer,
     modal : modalReducer
