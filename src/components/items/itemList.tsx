@@ -107,7 +107,7 @@ const ListOfItems = () => {
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell align='left' sx={{ fontWeight : 700 }}>
-                    {item.actualStock} {item.unit} {item.stockMovements.some(sm => sm.action === 'retiro' && sm.state === 'pendiente') ? <span className={styles.pendient}>Hay un retiro pendiente de {item.stockMovements.find(sm => sm.state === 'pendiente')?.amount} {item.unit}</span> : ''}
+                    {item.actualStock} {item.unit} {item.stockMovements.some(sm => sm.action === 'retiro' && sm.state === 'pendiente') ? <span className={styles.pendient}>(Retiro pendiente por {item.stockMovements.find(sm => sm.state === 'pendiente')?.amount} {item.unit})</span> : ''}
                   </TableCell>
                   <TableCell align='center'>
                     <ButtonGroup sx={{'boxShadow' : 'none'}} variant="contained" aria-label="outlined primary button group">

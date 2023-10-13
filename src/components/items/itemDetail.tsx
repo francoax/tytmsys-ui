@@ -27,6 +27,7 @@ import ConfirmWithdraw from './forms/confirmWithDrawForm';
 import { useEffect, useState } from 'react';
 import Item from 'utils/models/items';
 import ItemManagement from './forms/itemManagement';
+import { format } from 'date-fns';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -168,6 +169,12 @@ export default function CustomPaginationActionsTable() {
 
   const [showForm, setForm] = useState<{show : boolean, id? : number}>({ show : false })
 
+  const formatDate = (date : string) : string => {
+    date = date + 'Z'
+    const dateInstance = new Date(date)
+    return format(dateInstance, 'dd MMM yyyy, HH:mm a')
+  }
+
   return (
     <>
       <TopButtons>
@@ -202,9 +209,9 @@ export default function CustomPaginationActionsTable() {
           <TableCell>Cantidad</TableCell>
           <TableCell>Cantidad real usada</TableCell>
           <TableCell align='center'>Estado</TableCell>
-          <TableCell>Precio total</TableCell>
+          <TableCell>Total</TableCell>
           <TableCell>Dolar a la fecha</TableCell>
-          <TableCell>Fecha de accion</TableCell>
+          <TableCell>Fecha</TableCell>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
@@ -247,7 +254,7 @@ export default function CustomPaginationActionsTable() {
                 {sm.dollarAtDate === 0 ? '-' : `U$S${sm.dollarAtDate}`}
               </TableCell>
               <TableCell style={{ width: 160 }}>
-                {sm.dateOfAction.toString()}
+                {formatDate(sm.dateOfAction.toString())}
               </TableCell>
             </TableRow>
           ))}
