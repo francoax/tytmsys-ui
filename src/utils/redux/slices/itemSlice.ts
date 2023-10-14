@@ -4,6 +4,7 @@ import Item, { onItemDeposit, onItemWithdraw } from 'utils/models/items';
 import { setContent, showToast } from './toastSlice';
 import ItemsService from 'utils/services/itemsService';
 import { configureBuilderConfirmWithdraw, configureBuilderDeleteItem, configureBuilderGetItems, configureBuilderPostItem, configureBuilderUpdateItem } from '../thunks/itemsThunks';
+import { thereWhereChanges } from './stockSlice';
 
 
 type KnownError = {
@@ -31,6 +32,9 @@ export const addStock = createAsyncThunk<any, any, {rejectValue : KnownError}>(
 
       dispatch(setContent({ content : data.message, status : 'ok'}))
       dispatch(showToast())
+
+      dispatch(thereWhereChanges());
+
       return itemUpdated.data.data
     } catch (err) {
       let error : AxiosError<KnownError> = err as any
@@ -54,6 +58,9 @@ export const retireStock = createAsyncThunk<any, any, {rejectValue : KnownError}
 
       dispatch(setContent({ content: data.message, status: 'ok' }));
       dispatch(showToast());
+
+      dispatch(thereWhereChanges());
+
       return itemUpdated.data.data;
     } catch (err) {
       let error : AxiosError<KnownError> = err as any

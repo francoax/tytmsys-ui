@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import itemReducer from '../redux/slices/itemSlice'
 import stockReducer from './slices/stockSlice'
 import categoryReducer from '../redux/slices/categorySlice'
+import supplierSlice from './slices/supplierSlice'
 
 // components
 import toastReducer from '../redux/slices/toastSlice'
@@ -15,7 +16,8 @@ const store = configureStore({
     stock : stockReducer,
     categories : categoryReducer,
     toast : toastReducer,
-    modal : modalReducer
+    modal : modalReducer,
+    suppliers : supplierSlice
   }
 });
 

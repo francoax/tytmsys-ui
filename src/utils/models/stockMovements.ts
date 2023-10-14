@@ -12,6 +12,7 @@ export interface StockMovement {
 export interface StockMovements {
   id : number,
   action : string,
+  amount : number,
   realAmountUsed? : number,
   state : string,
   totalPrice : number,

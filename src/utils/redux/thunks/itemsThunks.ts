@@ -5,6 +5,7 @@ import { ItemState } from "../slices/itemSlice";
 import { KnownError } from "utils/models/commons";
 import { setContent, showToast } from "../slices/toastSlice";
 import { ConfirmWithdraw } from "utils/models/stockMovements";
+import { thereWhereChanges } from "../slices/stockSlice";
 
 export const getItems = createAsyncThunk(
   'items/list',
@@ -44,6 +45,8 @@ export const updateItem = createAsyncThunk(
       dispatch(setContent({ content: data.message, status: 'ok' }));
       dispatch(showToast());
 
+      dispatch(thereWhereChanges());
+
       return data.data
     } catch (error) {
       console.log(error)
@@ -59,6 +62,8 @@ export const deleteItem = createAsyncThunk(
 
       dispatch(setContent({ content: data.message, status: 'ok' }));
       dispatch(showToast())
+
+      dispatch(thereWhereChanges());
 
       return data.data
     } catch (error) {
@@ -77,6 +82,8 @@ export const confirmWithdraw = createAsyncThunk(
       dispatch(setContent({ content : data.message, status : 'ok'}))
       dispatch(showToast())
 
+      dispatch(thereWhereChanges())
+
       return itemUpdated.data.data
     } catch (error) {
       console.log(error)
@@ -89,6 +96,8 @@ export const updateItemInfo = createAsyncThunk(
   async (id : number, { dispatch }) => {
     try {
       const { data } = await ItemsService.getById(id)
+
+      dispatch(thereWhereChanges());
 
       return data.data
     } catch (error) {

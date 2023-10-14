@@ -23,7 +23,7 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
 import axios from 'axios';
 import SuppliersService from 'utils/services/suppliersService';
-import Supplier from 'utils/models/supplier';
+import {Supplier} from 'utils/models/supplier';
 
 
 function getStyles(name: string, suppliers: readonly Supplier[], theme: Theme) {

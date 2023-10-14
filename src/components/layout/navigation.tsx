@@ -62,13 +62,13 @@ const Sidebar = () => {
       </List>
       <Divider />
       <List>
-        <NavLink to={'/proveedores'}  className={({ isActive }) => isActive ? `${styles.navlinkActive}` : `${styles.navLink}`}>
           <ListItem disablePadding>
+            <NavLink to={'/proveedores'}  className={({ isActive }) => isActive ? `${styles.navlinkActive}` : `${styles.navLink}`}>
               <ListItemButton>
                 <ListItemText primary={'Proveedores'} />
               </ListItemButton>
-            </ListItem>
-        </NavLink>
+            </NavLink>
+          </ListItem>
         {['Categorias', 'Unidades'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>

@@ -1,16 +1,12 @@
-import Item from "./items"
-
-export default interface Supplier {
+export interface Supplier {
   id : number,
   name : string,
-  phone : string,
-  email : string,
-  direction : {
-    street : string,
-    streetNumber : string,
-    city : string
-  },
-  items : Item[],
+  address : string,
+  contact : string,
+  items : {
+    id : number,
+    name : string
+  }[]
 }
 
 export interface SupplierAgent {
