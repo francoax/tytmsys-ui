@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { KnownError } from "utils/models/commons";
 import { Supplier } from "utils/models/supplier";
-import { configureBuilderGetSuppliers } from "../thunks/suppliersThunks";
+import { configureBuilderCreateSupplier, configureBuilderDeleteSupplier, configureBuilderGetSuppliers, configureBuilderUpdateSupplier } from "../thunks/suppliersThunks";
 
 export interface SupplierState {
   list : Supplier[],
@@ -21,6 +21,9 @@ export const supplierSlice = createSlice({
   reducers : {},
   extraReducers : (builder) => {
     configureBuilderGetSuppliers(builder)
+    configureBuilderCreateSupplier(builder)
+    configureBuilderUpdateSupplier(builder)
+    configureBuilderDeleteSupplier(builder)
   }
 })
 

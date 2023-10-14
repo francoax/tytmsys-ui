@@ -2,11 +2,13 @@ import { Badge, BadgeProps, Button, ButtonGroup, IconButton, Menu, MenuItem, Pap
 import TopButtons from 'components/common/buttons/topButtonOptions'
 import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'utils/redux/hooks'
-import { getSuppliers } from 'utils/redux/thunks/suppliersThunks'
+import { deleteSupplier, getSuppliers } from 'utils/redux/thunks/suppliersThunks'
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from 'react-router-dom'
+import { Supplier } from 'utils/models/supplier'
+import { setModalContent, showModal } from 'utils/redux/slices/modalSlice'
+import Modal from 'components/common/modal'
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -17,11 +19,16 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   },
 }));
 
-const ListOfSuppliers = () => {
+type Props = {
+  setForm :(value: React.SetStateAction<{use : string, supToUpdate : Supplier | undefined, show : boolean} | undefined>) => void
+}
+
+const ListOfSuppliers = (props : Props) => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const suppliersStore = useAppSelector((state) => state.suppliers)
+  const modal = useAppSelector((state) => state.modal)
 
   useEffect(() => {
     if(suppliersStore.list.length < 1) {
@@ -29,6 +36,14 @@ const ListOfSuppliers = () => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const onDelete = (sup : Supplier) => {
+    dispatch(showModal())
+    dispatch(setModalContent({
+      title : `Eliminar ${sup.name}`,
+      message : 'Estas seguro que queres eliminarlo?'
+    }))
+  }
 
   if(suppliersStore.isLoading) {
     return (
@@ -39,7 +54,7 @@ const ListOfSuppliers = () => {
   return (
     <>
       <TopButtons>
-        <Button variant='contained'>Añadir nuevo proveedor</Button>
+        <Button variant='contained' onClick={() => props.setForm({use : 'create', supToUpdate : undefined, show : true})}>Añadir nuevo proveedor</Button>
       </TopButtons>
       {suppliersStore.list.length < 1 ? 'No hay proveedores por el momento...' : (
         <TableContainer component={Paper} sx={{ maxHeight: '75vh' }}>
@@ -62,8 +77,8 @@ const ListOfSuppliers = () => {
                 >
                   <TableCell>{sup.id}</TableCell>
                   <TableCell>{sup.name}</TableCell>
-                  <TableCell>{sup.address}</TableCell>
-                  <TableCell>{sup.contact}</TableCell>
+                  <TableCell>{sup.direction.street} {sup.direction.streetNumber}, {sup.direction.city}</TableCell>
+                  <TableCell>{sup.email} {sup.phone}</TableCell>
                   <TableCell>
                     <PopupState variant="popover" popupId="demo-popup-menu">
                       {(popupState) => (
@@ -98,16 +113,17 @@ const ListOfSuppliers = () => {
                   </TableCell>
                   <TableCell align='center'>
                     <ButtonGroup sx={{'boxShadow' : 'none', gap : '1em'}} variant="contained" aria-label="outlined primary button group">
-                      <Button variant='contained'>Editar</Button>
-                      <Button sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>
+                      <Button onClick={() => props.setForm({use : 'edit', supToUpdate : sup, show : true})} variant='contained'>Editar</Button>
+                      <Button onClick={() => onDelete(sup)}sx={{ backgroundColor : '#b90e0a', marginLeft : ''}}>Eliminar</Button>
                     </ButtonGroup>
                   </TableCell>
+                  {modal.isShown && <Modal action={deleteSupplier(sup.id)}/>}
                 </TableRow>
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
-        )}
+      )}
     </>
   )
 }
